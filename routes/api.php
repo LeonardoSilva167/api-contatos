@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\V1\UserContactController;
+use App\Http\Controllers\V1\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,6 +16,26 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
+
+Route::get('/',function(){
+    return response()->json(['api_name' => 'loja-back-end', 'api_version' => '1.0.0']);
 });
+
+Route::prefix('v1')->group(function() {
+    Route::prefix('user')->group(function() {
+        Route::get('/', [UserController::class, 'index']);
+        Route::post('/new', [UserController::class, 'store']);
+        Route::get('{id}', [UserController::class, 'show']);
+        Route::put('edit/{id}', [UserController::class, 'update']);
+        Route::delete('delete/{id}', [UserController::class, 'destroy']);
+    });
+
+    Route::prefix('user-contacs')->group(function() {
+        Route::delete('delete/{id}', [UserContactController::class, 'destroy']);
+    });
+});
+
+
