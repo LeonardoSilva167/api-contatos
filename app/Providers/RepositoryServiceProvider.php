@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Repositories\AdditionalContactRepository;
+use App\Repositories\ContactRepository;
+use App\Repositories\Contracts\AdditionalContactRepositoryInterface;
+use App\Repositories\Contracts\ContactRepositoryInterface;
 use App\Repositories\Contracts\UserContactRepositoryInterface;
 use App\Repositories\Contracts\UserRepositoryInterface;
 use App\Repositories\UserContactRepository;
@@ -19,6 +23,8 @@ class RepositoryServiceProvider extends ServiceProvider
     {
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
         $this->app->bind(UserContactRepositoryInterface::class, UserContactRepository::class);
+        $this->app->bind(ContactRepositoryInterface::class, ContactRepository::class);
+        $this->app->bind(AdditionalContactRepositoryInterface::class, AdditionalContactRepository::class);
     }
 
     /**
