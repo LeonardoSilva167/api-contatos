@@ -28,11 +28,14 @@ Route::get('/',function(){
 
 Route::prefix('v1')->group(function() {
     Route::prefix('contact')->group(function() {
+        Route::get('/get-count-contacts', [ContactController::class, 'getCountContacts']);
+
         Route::get('/', [ContactController::class, 'index']);
         Route::post('/new', [ContactController::class, 'store']);
         Route::get('{id}', [ContactController::class, 'show']);
         Route::put('edit/{id}', [ContactController::class, 'update']);
         Route::delete('delete/{id}', [ContactController::class, 'destroy']);
+        
     });
 
     Route::prefix('additional-contact')->group(function() {

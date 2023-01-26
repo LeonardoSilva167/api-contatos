@@ -66,6 +66,10 @@ class ContactService
 
     public function getAllCustom($id){
         
+        if($id){
+            throw new \Exception(Message::MSG_ALGO_ERRADO);
+        }
+
         $result =  $this->contactRepository->find($id);
         
         if(is_null($result) || $result->count() == 0) {
@@ -118,8 +122,13 @@ class ContactService
         return $result;
     }
 
+    public function getCountContacts()
+    {
+        return $this->contactRepository->getCountContacts();    
 
+    }
 
+    
 
 
 

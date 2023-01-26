@@ -138,4 +138,12 @@ class ContactController extends Controller
             return response()->json(['error' => true,'data'=> null,'state' => Message::ERRO,'message' => $ex->getMessage()], 404);
         }
     }
+
+    public function getCountContacts(){
+        try {
+            return response()->json($this->service->getCountContacts(), 200);            
+        }catch (\Exception $ex){
+            return response()->json(['error' => true,'data'=> null,'state' => Message::ERRO,'message' => $ex->getMessage()], 404);
+        }
+    }
 }
