@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\V1;
 
 use App\Http\Controllers\Controller;
+use App\Services\AdditionalContactService;
 use Illuminate\Http\Request;
 
 class AdditionalContactController extends Controller

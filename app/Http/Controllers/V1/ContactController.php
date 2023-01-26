@@ -2,41 +2,42 @@
 
 namespace App\Http\Controllers\V1;
 
+use App\Exceptions\Message;
 use App\Http\Controllers\Controller;
-use App\Services\ContactService;
+use App\services\Contactservice;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 
 class ContactController extends Controller
 {
     /**
-     * Service do Controller
+     * service do Controller
      *
      * @var service
      */
-    private $contactService;
+    private $service;
 
     /**
      * construtor do controller
      *
-     * @param ContactService $contactService
+     * @param Contactservice $service
      */
-    public function __construct(ContactService $contactService){
-        $this->contactService = $contactService;
+    public function __construct(Contactservice $service){
+        $this->service = $service;
     }
 
     /**
      * Display a listing of the resource.
      *
-     * @param integer $limit
-     * @param Request $request
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
-    public function index()
+    public function index():JsonResponse
     {
         try {
-            return response()->json($this->contactService->getAll(), 200);
+            return response()->json($this->service->getAll(), 200);            
         }catch (\Exception $ex){
-            return response()->json(['error' => true,'message' => $ex->getMessage()], $ex->getCode());
+            return response()->json(['error' => true,'data'=> null,'state' => Message::ERRO,'message' => $ex->getMessage()], 404);
         }
     }
 
@@ -57,11 +58,16 @@ class ContactController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
+    {   
         try {
-            return response()->json($this->contactService->create($request), 200);
+            DB::beginTransaction();
+            $result = $this->service->create($request);
+            DB::commit();
+            return response()->json($result, 200);            
+
         }catch (\Exception $ex){
-            return response()->json(['error' => true,'message' => $ex->getMessage()], $ex->getCode());
+            DB::rollback();
+            return response()->json(['error' => true,'data'=> null,'state' => Message::ERRO,'message' => $ex->getMessage()], 404);
         }
     }
 
@@ -75,9 +81,9 @@ class ContactController extends Controller
     public function show($id)
     {
         try {
-            return response()->json($this->contactService->getAllCustom($id), 200);
+            return response()->json($this->service->getAllCustom($id), 200);
         }catch (\Exception $ex){
-            return response()->json(['error' => true,'message' => $ex->getMessage()], $ex->getCode());
+            return response()->json(['error' => true,'data'=> null,'state' => Message::ERRO,'message' => $ex->getMessage()], 404);
         }
     }
 
@@ -102,9 +108,14 @@ class ContactController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            return response()->json($this->contactService->update($request, $id), 200);
+            DB::beginTransaction();
+            $result = $this->service->update($request, $id);
+            DB::commit();
+            return response()->json($result, 200);            
+
         }catch (\Exception $ex){
-            return response()->json(['error' => true,'message' => $ex->getMessage()], $ex->getCode());
+            DB::rollback();
+            return response()->json(['error' => true,'data'=> null,'state' => Message::ERRO,'message' => $ex->getMessage()], 404);
         }
     }
 
@@ -117,9 +128,14 @@ class ContactController extends Controller
     public function destroy($id)
     {
         try {
-            return response()->json($this->contactService->delete($id), 200);
+            DB::beginTransaction();
+            $result = $this->service->delete($id);
+            DB::commit();
+            return response()->json($result, 200);            
+
         }catch (\Exception $ex){
-            return response()->json(['error' => true,'message' => $ex->getMessage()], $ex->getCode());
+            DB::rollback();
+            return response()->json(['error' => true,'data'=> null,'state' => Message::ERRO,'message' => $ex->getMessage()], 404);
         }
     }
 }

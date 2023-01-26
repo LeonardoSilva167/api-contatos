@@ -27,17 +27,6 @@ Route::get('/',function(){
 });
 
 Route::prefix('v1')->group(function() {
-    Route::prefix('user')->group(function() {
-        Route::get('/', [UserController::class, 'index']);
-        Route::post('/new', [UserController::class, 'store']);
-        Route::get('{id}', [UserController::class, 'show']);
-        Route::put('edit/{id}', [UserController::class, 'update']);
-        Route::delete('delete/{id}', [UserController::class, 'destroy']);
-    });
-
-    Route::prefix('user-contacs')->group(function() {
-        Route::delete('delete/{id}', [UserContactController::class, 'destroy']);
-    });
     Route::prefix('contact')->group(function() {
         Route::get('/', [ContactController::class, 'index']);
         Route::post('/new', [ContactController::class, 'store']);
@@ -50,5 +39,6 @@ Route::prefix('v1')->group(function() {
         Route::delete('delete/{id}', [AdditionalContactController::class, 'destroy']);
     });
 });
+
 
 

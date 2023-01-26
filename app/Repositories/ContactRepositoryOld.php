@@ -5,10 +5,11 @@ namespace App\Repositories;
 use App\Exceptions\Message;
 use App\Models\Contact;
 use App\Repositories\Contracts\ContactRepositoryInterface;
+use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
-class ContactRepository implements ContactRepositoryInterface
+class ContactRepository implements extends BaseRepository  ContactRepositoryInterface
 {
     private $model;
 
@@ -28,21 +29,22 @@ class ContactRepository implements ContactRepositoryInterface
             
             $this->model->name      = trim($request->name);
             $this->model->email  = trim($request->email);
-            $this->model->telephone     = trim(trim($request->telephone));
-            $this->model->cell_phone     = trim(trim($request->cell_phone));
+            $this->model->telephone     = trim($request->telephone);
+            $this->model->cell_phone     = trim($request->cell_phone);
 
             DB::commit();
 
-            if($this->model->save()){
-                return ['error' => false,'state' => Message::SUCESSO, 'message' => Message::MSG_INSERIDO_SUCESSO];
+            if(!$this->model->save()){
+                return ['error' => true,'data'=> null,'state' => Message::ERRO, 'message' => throw new Exception()];
+                // return ['error' => true,'data'=> null,'state' => Message::ERRO, 'message' => Message::MSG_ALGO_ERRADO];
             }
-
-            return ['error' => true,'state' => Message::ERRO, 'message' => Message::MSG_ALGO_ERRADO];
+            
+            return ['error' => false,'data'=> $this->model,'state' => Message::SUCESSO, 'message' => Message::MSG_INSERIDO_SUCESSO];
 
 
         } catch (\Exception $e) {
             DB::rollback();
-            return ['error' => true,'state' => Message::ERRO, 'message' => "Erro, $e"];
+            return ['error' => true,'data'=> null,'state' => Message::ERRO, 'message' => "Erro, $e"];
         }
     }
 
@@ -62,15 +64,15 @@ class ContactRepository implements ContactRepositoryInterface
             
             if($model->save()){
                 DB::commit();
-                return ['error' => false,'state' => Message::SUCESSO, 'message' => Message::MSG_ALTERADO_SUCESSO];
+                return ['error' => false,'data'=> $model,'state' => Message::SUCESSO, 'message' => Message::MSG_ALTERADO_SUCESSO];
             }
             
-            return ['error' => true,'state' => Message::ERRO, 'message' => Message::MSG_ALGO_ERRADO];
+            return ['error' => true,'data'=> null,'state' => Message::ERRO, 'message' => Message::MSG_ALGO_ERRADO];
 
         } catch (\Exception $e) {
             DB::rollback();
             // throw $e;
-            return ['error' => true,'state' => Message::ERRO, 'message' => "Erro, $e"];
+            return ['error' => true,'data'=> null,'state' => Message::ERRO, 'message' => "Erro, $e"];
         }
     }
 
@@ -82,15 +84,15 @@ class ContactRepository implements ContactRepositoryInterface
             
             if($model->delete()){
                 DB::commit();
-                return ['error' => false,'state' => Message::SUCESSO, 'message' => Message::MSG_REMOVIDO_SUCESSO];
+                return ['error' => false,'data'=> $model,'state' => Message::SUCESSO, 'message' => Message::MSG_REMOVIDO_SUCESSO];
             }
 
-            return ['error' => true,'state' => Message::ERRO, 'message' => Message::MSG_ALGO_ERRADO];
+            return ['error' => true,'data'=> null,'state' => Message::ERRO, 'message' => Message::MSG_ALGO_ERRADO];
 
         } catch (\Exception $e) {
             DB::rollback();
             // throw $e;
-            return ['error' => true,'state' => Message::ERRO, 'message' => "Erro, $e"];
+            return ['error' => true,'data'=> null,'state' => Message::ERRO, 'message' => "Erro, $e"];
         }
     }}
  

@@ -17,7 +17,6 @@ class AdditionalContact extends Model
      */
     protected $fillable = [
         'contact_id',
-        'name',
         'email',
         'telephone',
         'cell_phone',

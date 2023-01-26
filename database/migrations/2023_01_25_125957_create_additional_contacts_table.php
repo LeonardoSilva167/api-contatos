@@ -16,7 +16,6 @@ class CreateAdditionalContactsTable extends Migration
         Schema::create('additional_contacts', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('contact_id');
-            $table->string('name');
             $table->string('email');
             $table->string('telephone');
             $table->string('cell_phone');
