@@ -1,5 +1,6 @@
 <?php
 
+use App\Exceptions\Message;
 use App\Http\Controllers\V1\AdditionalContactController;
 use App\Http\Controllers\V1\ContactController;
 use App\Http\Controllers\V1\UserContactController;
@@ -27,21 +28,30 @@ Route::get('/',function(){
 });
 
 Route::prefix('v1')->group(function() {
-    Route::prefix('contact')->group(function() {
-        Route::get('/get-count-contacts', [ContactController::class, 'getCountContacts']);
 
-        Route::get('/', [ContactController::class, 'index']);
-        Route::post('/new', [ContactController::class, 'store']);
-        Route::get('{id}', [ContactController::class, 'show']);
-        Route::put('edit/{id}', [ContactController::class, 'update']);
-        Route::delete('delete/{id}', [ContactController::class, 'destroy']);
+    Route::prefix('contact')->controller(ContactController::class)->group(function() {        
+        Route::get('/get-count-contacts','getCountContacts');
+        Route::get('/','index');
+        Route::post('/new','store');
+        Route::get('{id}','show');
+        Route::put('edit/{id}','update');
+        Route::delete('delete/{id}','destroy');
         
     });
-
-    Route::prefix('additional-contact')->group(function() {
-        Route::delete('delete/{id}', [AdditionalContactController::class, 'destroy']);
+    
+    Route::prefix('additional-contact')->controller(AdditionalContactController::class)->group(function() {
+        Route::get('/','index');
+        Route::post('/new','store');
+        Route::get('{id}','show');
+        Route::put('edit/{id}','update');
+        Route::delete('delete/{id}','destroy');
     });
+
+    
 });
 
+Route::fallback(function(){
+    return response()->json(['error' => true,'data'=> null,'state' => Message::ERRO,'Página não encontrada.'], 404);
+});
 
 
