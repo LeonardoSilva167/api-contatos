@@ -65,8 +65,7 @@ class ContactService
     }
 
     public function getAllCustom($id){
-        
-        if($id){
+        if(!$id){
             throw new \Exception(Message::MSG_ALGO_ERRADO);
         }
 
